@@ -40,3 +40,6 @@ test-results/
 # Temporary files
 tmp/
 temp/
+api-recorder@*
+node
+extracted-cookies.json
