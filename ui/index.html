@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Recorder - Network Traffic Monitor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🌐 API Recorder</h1>
+            <p class="subtitle">Capture and monitor network traffic in real-time</p>
+        </header>
+
+        <!-- Control Panel -->
+        <section class="control-panel">
+            <div class="control-group">
+                <label for="targetUrl">Target URL:</label>
+                <input 
+                    type="url" 
+                    id="targetUrl" 
+                    placeholder="https://example.com" 
+                    value="https://example.com"
+                >
+            </div>
+            
+            <div class="button-group">
+                <button id="startBtn" class="btn btn-primary">
+                    <span class="btn-icon">▶</span>
+                    Start Recording
+                </button>
+                <button id="stopBtn" class="btn btn-danger" disabled>
+                    <span class="btn-icon">⏹</span>
+                    Stop Recording
+                </button>
+                <button id="resetBtn" class="btn btn-secondary" title="Reset UI state">
+                    <span class="btn-icon">↻</span>
+                    Reset
+                </button>
+            </div>
+
+            <div class="session-info" id="sessionInfo" style="display: none;">
+                <span class="status-indicator" id="statusIndicator"></span>
+                <span id="sessionName"></span>
+            </div>
+        </section>
+
+        <!-- Filter Controls -->
+        <section class="filter-panel">
+            <h3>Data Filters</h3>
+            <div class="filter-controls">
+                <label class="filter-checkbox">
+                    <input type="checkbox" id="filterHeaders" checked>
+                    <span>Headers</span>
+                </label>
+                <label class="filter-checkbox">
+                    <input type="checkbox" id="filterPayload" checked>
+                    <span>Payload</span>
+                </label>
+                <label class="filter-checkbox">
+                    <input type="checkbox" id="filterPreview" checked>
+                    <span>Preview</span>
+                </label>
+                <label class="filter-checkbox">
+                    <input type="checkbox" id="filterResponse" checked>
+                    <span>Response</span>
+                </label>
+            </div>
+        </section>
+
+        <!-- Stats Bar -->
+        <section class="stats-bar">
+            <div class="stat">
+                <span class="stat-label">Total Requests:</span>
+                <span class="stat-value" id="totalRequests">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Status:</span>
+                <span class="stat-value" id="recordingStatus">Idle</span>
+            </div>
+        </section>
+
+        <!-- Request List -->
+        <section class="requests-section">
+            <div class="requests-header">
+                <h2>Captured Requests</h2>
+                <div class="request-controls">
+                    <label class="filter-checkbox" title="Show only API requests with JSON responses">
+                        <input type="checkbox" id="jsonOnlyFilter">
+                        <span>JSON APIs Only</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Search requests..." 
+                        class="search-input"
+                    >
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                </div>
+            </div>
+            
+            <div class="requests-table-container">
+                <table class="requests-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Method</th>
+                            <th>URL</th>
+                            <th>Status</th>
+                            <th>Type</th>
+                            <th>Size</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="requestsTableBody">
+                        <tr class="empty-row">
+                            <td colspan="7" class="empty-message">
+                                No requests captured yet. Start recording to begin capturing network traffic.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Request Detail Modal -->
+        <div id="requestModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modalTitle">Request Details</h2>
+                    <button class="modal-close" id="closeModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="headers">Headers</button>
+                        <button class="tab-btn" data-tab="payload">Payload</button>
+                        <button class="tab-btn" data-tab="preview">Preview</button>
+                        <button class="tab-btn" data-tab="response">Response</button>
+                    </div>
+                    <div class="modal-actions">
+                        <button id="copyCurlBtn" class="btn btn-primary">
+                            <span class="btn-icon">📋</span>
+                            Copy as cURL
+                        </button>
+                    </div>
+                    <div class="tab-content" id="tabContent">
+                        <div id="headersTab" class="tab-pane active">
+                            <h3>Request Headers</h3>
+                            <pre id="requestHeaders" class="code-block"></pre>
+                            <h3>Response Headers</h3>
+                            <pre id="responseHeaders" class="code-block"></pre>
+                        </div>
+                        <div id="payloadTab" class="tab-pane">
+                            <pre id="payloadContent" class="code-block"></pre>
+                        </div>
+                        <div id="previewTab" class="tab-pane">
+                            <pre id="previewContent" class="code-block"></pre>
+                        </div>
+                        <div id="responseTab" class="tab-pane">
+                            <pre id="responseContent" class="code-block"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

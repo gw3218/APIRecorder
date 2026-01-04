@@ -1,0 +1,32 @@
+{
+  "server": {
+    "port": 3000,
+    "host": "localhost"
+  },
+  "browser": {
+    "headless": false,
+    "defaultViewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "args": [
+      "--remote-debugging-port=9222"
+    ]
+  },
+  "storage": {
+    "type": "sqlite",
+    "database": "api-recorder.db",
+    "path": "./data"
+  },
+  "recording": {
+    "maxResponseBodySize": 10485760,
+    "enableCompression": true,
+    "captureImages": false,
+    "captureStylesheets": false,
+    "captureFonts": false
+  },
+  "session": {
+    "maxConcurrentSessions": 5,
+    "defaultRetentionDays": 30
+  }
+}

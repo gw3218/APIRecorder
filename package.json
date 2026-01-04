@@ -1,0 +1,42 @@
+{
+  "name": "api-recorder",
+  "version": "0.1.0",
+  "description": "API Recorder - Capture all network traffic using Chrome DevTools Protocol",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test tests/**/*.test.js",
+    "test:unit": "node --test tests/unit/**/*.test.js",
+    "test:integration": "node --test tests/integration/**/*.test.js",
+    "test:manual": "bash tests/manual-test.sh",
+    "test:all": "node tests/run-tests.js",
+    "migrate": "node src/storage/migrate.js"
+  },
+  "keywords": [
+    "api",
+    "recorder",
+    "cdp",
+    "network",
+    "capture",
+    "playwright"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "^1.40.0",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "sqlite3": "^5.1.6",
+    "uuid": "^9.0.1",
+    "date-fns": "^2.30.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
