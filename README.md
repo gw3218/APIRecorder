@@ -2,6 +2,8 @@
 
 A powerful application that records all API requests and responses from frontend to backend for any given website using Chrome DevTools Protocol (CDP).
 
+![Web UI](screenshots/web-ui.png)
+
 ## Features
 
 - 🎯 **Complete Network Capture**: Captures ALL network traffic including Fetch API, XHR, Service Workers, WebSockets, and more
