@@ -5,7 +5,7 @@ A powerful application that records all API requests and responses from frontend
 ## Features
 
 - 🎯 **Complete Network Capture**: Captures ALL network traffic including Fetch API, XHR, Service Workers, WebSockets, and more
-- 🔍 **No Code Injection**: Uses CDP - no need to modify target websites
+- 🔍 **No Code Injection**: Uses CDP — no need to modify target websites
 - 📊 **Real-time Monitoring**: View network traffic as it happens
 - 💾 **Persistent Storage**: Store recordings in SQLite database
 - 🔎 **Search & Filter**: Find specific requests by URL, method, status, or resource type
@@ -21,7 +21,7 @@ The application is built with a modular architecture:
 - **API Layer**: RESTful API for session and request management
 - **Storage Layer**: SQLite database for persistent storage
 
-See [ARCHITECTURE.md](./ARCHITECTURE.md) and [SPECIFICATIONS.md](./SPECIFICATIONS.md) for detailed documentation.
+See [ARCHITECTURE.md](./ARCHITECTURE.md) and [SPECIFICATIONS.md](./SPECIFICATIONS.md) for detailed documentation. For a quick introduction, check out the [Quick Start Guide](./QUICK_START.md) or the full [Usage Guide](./USAGE_GUIDE.md).
 
 ## Prerequisites
 
@@ -48,13 +48,13 @@ npx playwright install chromium
 
 ## Usage
 
-### Start the server
+### Start the Server
 
 ```bash
 npm start
 ```
 
-The server will start on `http://localhost:3000`
+The server will start on `http://localhost:3000`.
 
 ### API Endpoints
 
@@ -97,7 +97,7 @@ curl http://localhost:3000/api/sessions/SESSION_ID/requests
 
 ## Configuration
 
-Edit `config/default.json` to customize:
+Edit [`config/default.json`](./config/default.json) to customize:
 
 - Server port and host
 - Browser settings (headless, viewport, etc.)
@@ -106,7 +106,7 @@ Edit `config/default.json` to customize:
 
 ## Project Structure
 
-```
+```text
 APIRecorder/
 ├── src/
 │   ├── core/              # Core CDP functionality
@@ -125,17 +125,19 @@ APIRecorder/
 
 ## Development
 
-### Run in development mode
+### Run in Development Mode
 
 ```bash
 npm run dev
 ```
 
-### Run tests
+### Run Tests
 
 ```bash
 npm test
 ```
+
+For more details on testing, see the [Testing Guide](./tests/TESTING_GUIDE.md).
 
 ## Technology Stack
 
