@@ -38,7 +38,11 @@ const elements = {
     filterHeaders: document.getElementById('filterHeaders'),
     filterPayload: document.getElementById('filterPayload'),
     filterPreview: document.getElementById('filterPreview'),
-    filterResponse: document.getElementById('filterResponse')
+    filterResponse: document.getElementById('filterResponse'),
+    navigationPanel: document.getElementById('navigationPanel'),
+    navigateUrl: document.getElementById('navigateUrl'),
+    navigateBtn: document.getElementById('navigateBtn'),
+    headlessMode: document.getElementById('headlessMode')
 };
 
 // Initialize
@@ -69,6 +73,14 @@ function setupEventListeners() {
     elements.filterPayload.addEventListener('change', updateFilters);
     elements.filterPreview.addEventListener('change', updateFilters);
     elements.filterResponse.addEventListener('change', updateFilters);
+    
+    // Navigation button for headless mode
+    elements.navigateBtn.addEventListener('click', navigateToUrl);
+    elements.navigateUrl.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            navigateToUrl();
+        }
+    });
     
     // Close modal on outside click
     elements.requestModal.addEventListener('click', (e) => {
@@ -123,13 +135,14 @@ async function startRecording() {
         const session = await sessionResponse.json();
         state.currentSessionId = session.sessionId;
         
-        // Start session
+        // Start session with headless mode option
+        const headless = elements.headlessMode.checked;
         const startResponse = await fetch(`${API_BASE}/api/sessions/${session.sessionId}/start`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ targetUrl })
+            body: JSON.stringify({ targetUrl, headless })
         });
         
         if (!startResponse.ok) {
@@ -149,11 +162,20 @@ async function startRecording() {
         elements.startBtn.disabled = true;
         elements.stopBtn.disabled = false;
         elements.targetUrl.disabled = true;
+        elements.headlessMode.disabled = true;
         elements.sessionInfo.style.display = 'flex';
         elements.sessionName.textContent = session.name;
         elements.statusIndicator.className = 'status-indicator recording';
         elements.recordingStatus.textContent = 'Recording';
         elements.recordingStatus.style.color = 'var(--danger-color)';
+        
+        // Show navigation panel only in headless mode
+        if (headless) {
+            elements.navigationPanel.style.display = 'block';
+            elements.navigateUrl.value = '';
+        } else {
+            elements.navigationPanel.style.display = 'none';
+        }
         
         // Clear previous requests
         state.requests = [];
@@ -179,6 +201,55 @@ async function startRecording() {
         
         alert(`Failed to start recording:\n\n${errorMessage}`);
         elements.startBtn.disabled = false;
+    }
+}
+
+// Navigate to URL (for headless mode)
+async function navigateToUrl() {
+    const url = elements.navigateUrl.value.trim();
+    
+    if (!url) {
+        alert('Please enter a URL to navigate to');
+        return;
+    }
+    
+    if (!state.currentSessionId) {
+        alert('No active recording session');
+        return;
+    }
+    
+    try {
+        elements.navigateBtn.disabled = true;
+        elements.navigateBtn.textContent = 'Loading...';
+        
+        const response = await fetch(`${API_BASE}/api/sessions/${state.currentSessionId}/navigate`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ url })
+        });
+        
+        if (!response.ok) {
+            let errorMessage = 'Failed to navigate';
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.error || errorMessage;
+            } catch (e) {
+                errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+            }
+            throw new Error(errorMessage);
+        }
+        
+        // Clear the input after successful navigation
+        elements.navigateUrl.value = '';
+        
+    } catch (error) {
+        console.error('Navigation error:', error);
+        alert(`Navigation failed:\n\n${error.message}`);
+    } finally {
+        elements.navigateBtn.disabled = false;
+        elements.navigateBtn.innerHTML = '<span class="btn-icon">🔗</span> Go';
     }
 }
 
@@ -241,6 +312,10 @@ function resetUI() {
     elements.statusIndicator.className = 'status-indicator idle';
     elements.recordingStatus.textContent = 'Idle';
     elements.recordingStatus.style.color = 'var(--text-secondary)';
+    
+    // Re-enable headless mode checkbox and hide navigation panel
+    elements.headlessMode.disabled = false;
+    elements.navigationPanel.style.display = 'none';
     
     // Stop polling
     stopPolling();

@@ -93,6 +93,30 @@ body {
     cursor: not-allowed;
 }
 
+.browser-mode-group {
+    margin-bottom: 15px;
+}
+
+.mode-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.mode-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.mode-hint {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
 .button-group {
     display: flex;
     gap: 10px;
