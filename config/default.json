@@ -1,10 +1,10 @@
 {
   "server": {
-    "port": 3000,
-    "host": "localhost"
+    "port": 12000,
+    "host": "0.0.0.0"
   },
   "browser": {
-    "headless": false,
+    "headless": true,
     "defaultViewport": {
       "width": 1280,
       "height": 720

@@ -75,7 +75,7 @@ export class SessionManager {
     try {
       browserLauncher = new BrowserLauncher();
       const result = await browserLauncher.launch({
-        headless: false // Can be configured
+        headless: true // Run in headless mode for server environments
       });
       page = result.page;
       cdpSession = result.cdpSession;
@@ -150,6 +150,28 @@ export class SessionManager {
     });
 
     return session;
+  }
+
+  /**
+   * Navigate to a new URL in an active session
+   * @param {string} sessionId - Session ID
+   * @param {string} url - URL to navigate to
+   * @returns {Promise<Object>}
+   */
+  async navigate(sessionId, url) {
+    const session = this.sessions.get(sessionId);
+    if (!session) {
+      throw new Error(`Session ${sessionId} not found`);
+    }
+
+    if (session.status !== 'active') {
+      throw new Error(`Session ${sessionId} is not active`);
+    }
+
+    // Navigate using CDP client
+    await session.cdpClient.navigate(url);
+
+    return { success: true, url };
   }
 
   /**

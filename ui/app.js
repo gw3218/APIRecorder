@@ -38,7 +38,10 @@ const elements = {
     filterHeaders: document.getElementById('filterHeaders'),
     filterPayload: document.getElementById('filterPayload'),
     filterPreview: document.getElementById('filterPreview'),
-    filterResponse: document.getElementById('filterResponse')
+    filterResponse: document.getElementById('filterResponse'),
+    navigationPanel: document.getElementById('navigationPanel'),
+    navigateUrl: document.getElementById('navigateUrl'),
+    navigateBtn: document.getElementById('navigateBtn')
 };
 
 // Initialize
@@ -63,6 +66,14 @@ function setupEventListeners() {
     elements.jsonOnlyFilter.addEventListener('change', toggleJsonFilter);
     elements.closeModal.addEventListener('click', closeModal);
     elements.copyCurlBtn.addEventListener('click', copyAsCurl);
+    
+    // Navigation
+    elements.navigateBtn.addEventListener('click', navigateToUrl);
+    elements.navigateUrl.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            navigateToUrl();
+        }
+    });
     
     // Filter checkboxes
     elements.filterHeaders.addEventListener('change', updateFilters);
@@ -155,6 +166,10 @@ async function startRecording() {
         elements.recordingStatus.textContent = 'Recording';
         elements.recordingStatus.style.color = 'var(--danger-color)';
         
+        // Show navigation panel
+        elements.navigationPanel.style.display = 'block';
+        elements.navigateUrl.value = '';
+        
         // Clear previous requests
         state.requests = [];
         renderRequests();
@@ -242,8 +257,63 @@ function resetUI() {
     elements.recordingStatus.textContent = 'Idle';
     elements.recordingStatus.style.color = 'var(--text-secondary)';
     
+    // Hide navigation panel
+    elements.navigationPanel.style.display = 'none';
+    
     // Stop polling
     stopPolling();
+}
+
+// Navigate to URL
+async function navigateToUrl() {
+    const url = elements.navigateUrl.value.trim();
+    
+    if (!url) {
+        alert('Please enter a URL to navigate to');
+        return;
+    }
+    
+    if (!state.currentSessionId) {
+        alert('No active recording session');
+        return;
+    }
+    
+    try {
+        elements.navigateBtn.disabled = true;
+        elements.navigateBtn.textContent = 'Loading...';
+        
+        const response = await fetch(`${API_BASE}/api/sessions/${state.currentSessionId}/navigate`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ url })
+        });
+        
+        if (!response.ok) {
+            let errorMessage = 'Failed to navigate';
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.error || errorMessage;
+            } catch (e) {
+                errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+            }
+            throw new Error(errorMessage);
+        }
+        
+        // Clear the input after successful navigation
+        elements.navigateUrl.value = '';
+        
+        // Trigger an immediate update of requests
+        await updateRequests();
+        
+    } catch (error) {
+        console.error('Error navigating:', error);
+        alert(`Failed to navigate: ${error.message}`);
+    } finally {
+        elements.navigateBtn.disabled = false;
+        elements.navigateBtn.innerHTML = '<span class="btn-icon">🔗</span> Go';
+    }
 }
 
 // Polling for requests

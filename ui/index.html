@@ -47,6 +47,25 @@
             </div>
         </section>
 
+        <!-- Navigation Panel (shown when recording) -->
+        <section class="navigation-panel" id="navigationPanel" style="display: none;">
+            <div class="control-group">
+                <label for="navigateUrl">Navigate to URL:</label>
+                <div class="navigate-input-group">
+                    <input 
+                        type="url" 
+                        id="navigateUrl" 
+                        placeholder="https://example.com/api/endpoint"
+                    >
+                    <button id="navigateBtn" class="btn btn-primary">
+                        <span class="btn-icon">🔗</span>
+                        Go
+                    </button>
+                </div>
+            </div>
+            <p class="navigation-hint">Enter a URL to navigate the headless browser and capture API requests</p>
+        </section>
+
         <!-- Filter Controls -->
         <section class="filter-panel">
             <h3>Data Filters</h3>

@@ -68,6 +68,22 @@ export function setupRoutes(app) {
     }
   });
 
+  // Navigate to a new URL in an active session
+  app.post('/api/sessions/:sessionId/navigate', async (req, res) => {
+    try {
+      const { url } = req.body;
+      if (!url) {
+        return res.status(400).json({ error: 'url is required' });
+      }
+      const result = await sessionManager.navigate(req.params.sessionId, url);
+      res.json(result);
+    } catch (error) {
+      const statusCode = error.message.includes('not found') ? 404 : 
+                        error.message.includes('not active') ? 409 : 500;
+      res.status(statusCode).json({ error: error.message });
+    }
+  });
+
   app.delete('/api/sessions/:sessionId', async (req, res) => {
     try {
       await sessionManager.deleteSession(req.params.sessionId);
