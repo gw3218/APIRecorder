@@ -4,6 +4,8 @@ A powerful application that records all API requests and responses from frontend
 
 ![Web UI](screenshots/web-ui.png)
 
+![Request Detail View](screenshots/ScreenShot_2026-01-05_163745_512.png)
+
 ## Features
 
 - 🎯 **Complete Network Capture**: Captures ALL network traffic including Fetch API, XHR, Service Workers, WebSockets, and more
