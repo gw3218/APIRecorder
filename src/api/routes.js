@@ -44,12 +44,11 @@ export function setupRoutes(app) {
 
   app.post('/api/sessions/:sessionId/start', async (req, res) => {
     try {
-      const { targetUrl, headless } = req.body;
+      const { targetUrl } = req.body;
       if (!targetUrl) {
         return res.status(400).json({ error: 'targetUrl is required' });
       }
-      const options = { headless: headless === true };
-      const session = await sessionManager.startSession(req.params.sessionId, targetUrl, options);
+      const session = await sessionManager.startSession(req.params.sessionId, targetUrl);
       res.json(session);
     } catch (error) {
       const statusCode = error.message.includes('not found') ? 404 : 
@@ -62,21 +61,6 @@ export function setupRoutes(app) {
     try {
       const session = await sessionManager.stopSession(req.params.sessionId);
       res.json(session);
-    } catch (error) {
-      const statusCode = error.message.includes('not found') ? 404 : 
-                        error.message.includes('not active') ? 409 : 500;
-      res.status(statusCode).json({ error: error.message });
-    }
-  });
-
-  app.post('/api/sessions/:sessionId/navigate', async (req, res) => {
-    try {
-      const { url } = req.body;
-      if (!url) {
-        return res.status(400).json({ error: 'url is required' });
-      }
-      await sessionManager.navigate(req.params.sessionId, url);
-      res.json({ success: true, url });
     } catch (error) {
       const statusCode = error.message.includes('not found') ? 404 : 
                         error.message.includes('not active') ? 409 : 500;

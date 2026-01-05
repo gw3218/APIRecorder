@@ -57,11 +57,9 @@ export class SessionManager {
    * Start recording session
    * @param {string} sessionId - Session ID
    * @param {string} targetUrl - Target URL to navigate to
-   * @param {Object} options - Options for starting the session
-   * @param {boolean} options.headless - Whether to run browser in headless mode (default: false)
    * @returns {Promise<Object>}
    */
-  async startSession(sessionId, targetUrl, options = {}) {
+  async startSession(sessionId, targetUrl) {
     const session = this.sessions.get(sessionId);
     if (!session) {
       throw new Error(`Session ${sessionId} not found`);
@@ -71,16 +69,13 @@ export class SessionManager {
       throw new Error(`Session ${sessionId} is already active`);
     }
 
-    // Get headless option (default: false for non-headless mode)
-    const headless = options.headless === true;
-
     // Launch browser
     let browserLauncher;
     let page, cdpSession;
     try {
       browserLauncher = new BrowserLauncher();
       const result = await browserLauncher.launch({
-        headless: headless
+        headless: false // Can be configured
       });
       page = result.page;
       cdpSession = result.cdpSession;
@@ -139,7 +134,6 @@ export class SessionManager {
     session.status = 'active';
     session.targetUrl = targetUrl;
     session.browserLauncher = browserLauncher;
-    session.page = page;
     session.cdpClient = cdpClient;
     session.networkMonitor = networkMonitor;
     session.eventHandler = eventHandler;
@@ -235,29 +229,6 @@ export class SessionManager {
     }
 
     return session;
-  }
-
-  /**
-   * Navigate to a URL in an active session
-   * @param {string} sessionId - Session ID
-   * @param {string} url - URL to navigate to
-   * @returns {Promise<void>}
-   */
-  async navigate(sessionId, url) {
-    const session = this.sessions.get(sessionId);
-    if (!session) {
-      throw new Error(`Session ${sessionId} not found`);
-    }
-
-    if (session.status !== 'active') {
-      throw new Error(`Session ${sessionId} is not active`);
-    }
-
-    if (!session.page) {
-      throw new Error(`Session ${sessionId} has no browser page`);
-    }
-
-    await session.page.goto(url, { waitUntil: 'domcontentloaded' });
   }
 
   /**

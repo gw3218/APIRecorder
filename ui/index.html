@@ -26,14 +26,6 @@
                 >
             </div>
             
-            <div class="control-group browser-mode-group">
-                <label class="mode-checkbox">
-                    <input type="checkbox" id="headlessMode">
-                    <span>Headless Mode</span>
-                    <span class="mode-hint">(Run browser without visible window)</span>
-                </label>
-            </div>
-            
             <div class="button-group">
                 <button id="startBtn" class="btn btn-primary">
                     <span class="btn-icon">▶</span>
@@ -53,25 +45,6 @@
                 <span class="status-indicator" id="statusIndicator"></span>
                 <span id="sessionName"></span>
             </div>
-        </section>
-
-        <!-- Navigation Panel (shown when recording in headless mode) -->
-        <section class="navigation-panel" id="navigationPanel" style="display: none;">
-            <div class="control-group">
-                <label for="navigateUrl">Navigate to URL:</label>
-                <div class="navigate-input-group">
-                    <input 
-                        type="url" 
-                        id="navigateUrl" 
-                        placeholder="https://example.com/api/endpoint"
-                    >
-                    <button id="navigateBtn" class="btn btn-primary">
-                        <span class="btn-icon">🔗</span>
-                        Go
-                    </button>
-                </div>
-            </div>
-            <p class="navigation-hint">Enter a URL to navigate the headless browser and capture API requests</p>
         </section>
 
         <!-- Filter Controls -->
